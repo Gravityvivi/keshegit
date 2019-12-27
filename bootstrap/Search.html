@@ -4,11 +4,83 @@
 		<meta charset="utf-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 		<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
-	</head>
-	<body style="background-color: #c4cbcf">
-		<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>
+
+		<script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js">
+		</script>
 		<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+		<script type="text/javascript">
+			var freshFormData={"info_other_type":""}
+			function getEntity(typeName){
+				buttonName={"work":"工作","height":"身高","weight":"体重","school":"院校","born":"出生地","id":"身份证","mail":"邮箱","birth":"生日"}
+				$("#info_other_type_button").text(buttonName[typeName]);
+				return {
+					info_name:$("#info_name").val(),
+					info_sex:$("#info_sex").val(),
+					info_loc:$("#info_loc").val(),
+					info_tel:$("#info_tel").val(),
+					info_other_type:typeName,
+					info_other_detail:$("#info_other_detail").val()
+				}
+			}
+			$(document).ready(function(){
+				$("#wait").hide();
+  				$("#reInput").hide();
+  				$("#info_other_type_work").click(function(){
+  					console.log(freshFormData = getEntity("work"))
+  				});
+  				$("#info_other_type_height").click(function(){
+  					console.log(freshFormData = getEntity("height"))
+  				});
+  				$("#info_other_type_weight").click(function(){
+  					console.log(freshFormData = getEntity("weight"))
+  				});
+  				$("#info_other_type_school").click(function(){
+  					console.log(freshFormData = getEntity("school"))
+  				});
+  				$("#info_other_type_born").click(function(){
+  					console.log(freshFormData = getEntity("born"))
+  				});
+  				$("#info_other_type_id").click(function(){
+  					console.log(freshFormData = getEntity("id"))
+  				});
+  				$("#info_other_type_mail").click(function(){
+  					console.log(freshFormData = getEntity("mail"))
+  				});
+  				$("#info_other_type_birth").click(function(){
+  					console.log(freshFormData = getEntity("birth"))
+  				});
+  				$("#search").click(function(){
+  					freshFormData = getEntity(freshFormData["info_other_type"]);
+  					console.log(freshFormData);
+   					$("#wait").show();
+   					$("#origin").fadeOut("slow");
+   					check();
+  				});
+			});
+			function check() {
+	            $.ajax({
+	                type: "POST",//方法类型
+	                dataType: "json",//预期服务器返回的数据类型
+	                url: "/_search" ,//url
+	                data: $('#formSearch').serialize(),
+	                success: function (result){
+	                    if (result.code == 200) {
+	                        alert("SUCCESS");
+	                        window.location.replace("/result.html");
+	                    }
+	                    else if(result.code == 300){
+	                    	$("#origin").hide();
+			            	$("#wait").hide();
+			            	$("#reInput").show();
+	                    }
+	                },
+	                error : function() {alert("ERROR")}
+	            });
+        	}
+		</script>
+	</head>
+	<body style="background-color: #c4cbcf">
 	
 <div class="jumbotron text-center" style="margin-bottom:0;background-color: #c4cbcf">
 
@@ -30,22 +102,62 @@
   </div>  
 </nav>
 
-<div class="row" style="margin-top:150px">
-	<div class="m-auto">
-		<img src="./figures/Demo.png" title="个人隐私评估系统" alt="个人隐私评估系统" height="100px" align="left">
+<div id="origin">
+	<div class="row" style="margin-top:75px">
+		<div class="m-auto">
+			<img src="./figures/Demo.png" title="个人隐私评估系统" alt="个人隐私评估系统" height="100px" align="left">
+		</div>
 	</div>
-</div>
-
-<div class="row">
 	<div class="col-sm-4 m-auto">
-		<form>
-		  <div class="form-group">
-		    <label for="name"></label>
-		    <input type="text" class="form-control" id="name" placeholder="请输入搜索的名字" required>
-		  </div>
-		  <button type="button" class="btn btn-dark">| 搜索 |</button>
+		<form id="formSearch" action="##" method="post">
+			<div class="form-group">
+				<label for="Info"></label>
+				<input id="info_name" type="text" class="form-control" placeholder="名字(必填)" required>
+				<input id="info_sex" type="text" class="form-control" placeholder="性别">
+				<input id="info_loc" type="text" class="form-control" placeholder="所在地">
+				<input id="info_tel" type="text" class="form-control" placeholder="电话">
+			</div>
+			  	<lable for="moreInfo"></lable>
+			<div class="input-group-prepend">
+				<button type="button" id="info_other_type_button" class="btn btn-secondary dropdown-toggle" data-toggle="dropdown">选择其他信息</button>
+				<div class="dropdown-menu" id="info_other_type">
+					<option id="info_other_type_work" class="dropdown-item">工作</option>
+					<option id="info_other_type_height" class="dropdown-item">身高</option>
+					<option id="info_other_type_weight" class="dropdown-item">体重</option>
+					<option id="info_other_type_school" class="dropdown-item">毕业院校</option>
+					<option id="info_other_type_born" class="dropdown-item">出生地</option>
+					<option id="info_other_type_id" class="dropdown-item">身份证号码</option>
+					<option id="info_other_type_mail" class="dropdown-item">邮箱</option>
+					<option id="info_other_type_birth" class="dropdown-item">生日</option>
+				</div>
+				<input id="info_other_detail" type="text" class="form-control" placeholder="对应信息">
+			</div>
+			<button type="button" class="btn btn-dark" style="margin-top: 20px" id="search">| 搜索 |</button>
 		</form>
 	</div>
 </div>
+
+<div id="wait" style="margin-top:270px">
+	<img src="figures/wait.gif">
+	<p class="text-dark" style="margin-top:280px"> 正在加载中···请您耐心等待</p>
+</div>
+
+<div id="reInput">
+	<p style="margin-top:100px">搜索条件过少，请额外输入限制条件(任选其一或几个)：</p>
+	<div class="col-sm-4 m-auto">
+		<form action="##" method="post">
+			<div class="form-group">
+				<label for="moreInfo"></label>
+				<input id="info_other_type_birth" type="text" class="form-control" placeholder="生日">
+				<input id="info_other_type_work" type="text" class="form-control" placeholder="工作">
+				<input id="info_other_type_school" type="text" class="form-control" placeholder="毕业院校">
+				<input id="info_other_type_height" type="text" class="form-control" placeholder="身高">
+				<input id="info_other_type_born" type="text" class="form-control" placeholder="出生地">
+			</div>
+			<button type="button" class="btn btn-dark" style="margin-top: 20px">| 确认 |</button>
+		</form>
+	</div>
+</div>
+
 </body>
 </html>
