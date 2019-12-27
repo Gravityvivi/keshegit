@@ -9,76 +9,6 @@
 		</script>
 		<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
 		<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
-		<script type="text/javascript">
-			var freshFormData={"info_other_type":""}
-			function getEntity(typeName){
-				buttonName={"work":"工作","height":"身高","weight":"体重","school":"院校","born":"出生地","id":"身份证","mail":"邮箱","birth":"生日"}
-				$("#info_other_type_button").text(buttonName[typeName]);
-				return {
-					info_name:$("#info_name").val(),
-					info_sex:$("#info_sex").val(),
-					info_loc:$("#info_loc").val(),
-					info_tel:$("#info_tel").val(),
-					info_other_type:typeName,
-					info_other_detail:$("#info_other_detail").val()
-				}
-			}
-			$(document).ready(function(){
-				$("#wait").hide();
-  				$("#reInput").hide();
-  				$("#info_other_type_work").click(function(){
-  					console.log(freshFormData = getEntity("work"))
-  				});
-  				$("#info_other_type_height").click(function(){
-  					console.log(freshFormData = getEntity("height"))
-  				});
-  				$("#info_other_type_weight").click(function(){
-  					console.log(freshFormData = getEntity("weight"))
-  				});
-  				$("#info_other_type_school").click(function(){
-  					console.log(freshFormData = getEntity("school"))
-  				});
-  				$("#info_other_type_born").click(function(){
-  					console.log(freshFormData = getEntity("born"))
-  				});
-  				$("#info_other_type_id").click(function(){
-  					console.log(freshFormData = getEntity("id"))
-  				});
-  				$("#info_other_type_mail").click(function(){
-  					console.log(freshFormData = getEntity("mail"))
-  				});
-  				$("#info_other_type_birth").click(function(){
-  					console.log(freshFormData = getEntity("birth"))
-  				});
-  				$("#search").click(function(){
-  					freshFormData = getEntity(freshFormData["info_other_type"]);
-  					console.log(freshFormData);
-   					$("#wait").show();
-   					$("#origin").fadeOut("slow");
-   					check();
-  				});
-			});
-			function check() {
-	            $.ajax({
-	                type: "POST",//方法类型
-	                dataType: "json",//预期服务器返回的数据类型
-	                url: "/search_func/" ,//url
-	                data: freshFormData,
-	                success: function (result){
-	                    if (result.code == 200) {
-	                        alert("SUCCESS");
-	                        window.location.replace("/result.html");
-	                    }
-	                    else if(result.code == 300){
-	                    	$("#origin").hide();
-			            	$("#wait").hide();
-			            	$("#reInput").show();
-	                    }
-	                },
-	                error : function() {alert("ERROR")}
-	            });
-        	}
-		</script>
 	</head>
 	<body style="background-color: #c4cbcf">
 	
@@ -86,17 +16,17 @@
 
 <div class="container-fluid" >
 <nav class="navbar navbar-expand-sm bg-dark navbar-dark fixed-top">
-  <a class="navbar-brand" href="/search/">首页</a>
+  <a class="navbar-brand" href="/search.html">首页</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#collapsibleNavbar">
     <span class="navbar-toggler-icon"></span>
   </button>
   <div class="collapse navbar-collapse" id="collapsibleNavbar">
     <ul class="navbar-nav ml-auto">
       <li class="nav-item" align="right">
-        <a class="nav-link" href="/login/">登录</a>
+        <a class="nav-link" href="/login.html">登录</a>
       </li>
       <li class="nav-item" align="right">
-        <a class="nav-link" href="/register/">注册</a>
+        <a class="nav-link" href="/register.html">注册</a>
       </li>    
     </ul>
   </div>  
@@ -112,10 +42,9 @@
 		<form id="formSearch" action="##" method="post" onsubmit="return false">
 			<div class="form-group">
 				<label for="Info"></label>
-				<input id="info_name" type="text" class="form-control" placeholder="名字(必填)" required>
+				<input id="info_name" type="text" class="form-control" placeholder="姓名(必填)" required>
 				<input id="info_sex" type="text" class="form-control" placeholder="性别">
 				<input id="info_loc" type="text" class="form-control" placeholder="所在地">
-				<input id="info_tel" type="text" class="form-control" placeholder="电话">
 			</div>
 			  	<lable for="moreInfo"></lable>
 			<div class="input-group-prepend">
@@ -123,23 +52,14 @@
 				<div class="dropdown-menu" id="info_other_type">
 					<option id="info_other_type_work" class="dropdown-item">工作</option>
 					<option id="info_other_type_height" class="dropdown-item">身高</option>
-					<option id="info_other_type_weight" class="dropdown-item">体重</option>
 					<option id="info_other_type_school" class="dropdown-item">毕业院校</option>
 					<option id="info_other_type_born" class="dropdown-item">出生地</option>
-					<option id="info_other_type_id" class="dropdown-item">身份证号码</option>
-					<option id="info_other_type_mail" class="dropdown-item">邮箱</option>
 					<option id="info_other_type_birth" class="dropdown-item">生日</option>
 				</div>
 				<input id="info_other_detail" type="text" class="form-control" placeholder="对应信息">
 			</div>
-			<button type="button" class="btn btn-dark" style="margin-top: 20px" id="search">| 搜索 |</button>
 		</form>
 	</div>
-</div>
-
-<div id="wait" style="margin-top:270px">
-	<img src="../static/figures/wait.gif">
-	<p class="text-dark" style="margin-top:280px"> 正在加载中···请您耐心等待</p>
 </div>
 
 <div id="reInput">
@@ -148,17 +68,121 @@
 		<form action="##" method="post" onsubmit="return false">
 			<div class="form-group">
 				<label for="moreInfo"></label>
-				<input id="info_other_type_birth" type="text" class="form-control" placeholder="生日">
-				<input id="info_other_type_work" type="text" class="form-control" placeholder="工作">
-				<input id="info_other_type_school" type="text" class="form-control" placeholder="毕业院校">
-				<input id="info_other_type_height" type="text" class="form-control" placeholder="身高">
-				<input id="info_other_type_born" type="text" class="form-control" placeholder="出生地">
+				<input id="info_other_type_birth_re" type="text" class="form-control" placeholder="生日">
+				<input id="info_other_type_work_re" type="text" class="form-control" placeholder="工作">
+				<input id="info_other_type_school_re" type="text" class="form-control" placeholder="毕业院校">
+				<input id="info_other_type_height_re" type="text" class="form-control" placeholder="身高">
+				<input id="info_other_type_born_re" type="text" class="form-control" placeholder="出生地">
 			</div>
-			<button type="button" class="btn btn-dark" style="margin-top: 20px">| 确认 |</button>
 		</form>
 	</div>
 </div>
+
+<div id="search_div" style="opacity:1">
+<button type="button" class="btn btn-dark" style="margin-top: 20px" id="search">| 搜索 |</button>
+</div>
+
+<div id="wait" style="margin-top:270px">
+	<img src="../static/figures/wait.gif">
+	<p class="text-dark" style="margin-top:280px"> 正在加载中···请您耐心等待</p>
+</div>
+
+
 </div>
 </div>
+
+<script type="text/javascript">
+	var freshFormData={"info_other_type":""}
+	function getPostJson(data){
+		input = JSON.parse(JSON.stringify(data));
+		if(input["info_other_type"]!=""){
+			if(input["info_other_type_"+input["info_other_type"]]==""){
+				input["info_other_type_"+input["info_other_type"]]=input["info_other_detail"];
+			}
+		}
+		delete input["info_other_type"];
+		delete input["info_other_detail"];
+		return input;
+	}
+	function getEntity(typeName){
+		buttonName={"work":"工作","height":"身高","school":"毕业院校","born":"出生地","birth":"生日"}
+		$("#info_other_type_button").text(buttonName[typeName]);
+		return {
+			info_name:$("#info_name").val(),
+			info_sex:$("#info_sex").val(),
+			info_loc:$("#info_loc").val(),
+
+			info_other_type_work:$("#info_other_type_work_re").val(),
+			info_other_type_height:$("#info_other_type_height_re").val(),
+			info_other_type_school:$("#info_other_type_school_re").val(),
+			info_other_type_born:$("#info_other_type_born_re").val(),
+			info_other_type_birth:$("#info_other_type_birth_re").val(),
+
+			info_other_type:typeName,
+			info_other_detail:$("#info_other_detail").val()
+		}
+	}
+	$(document).ready(function(){
+		$("#wait").hide();
+			$("#reInput").hide();
+			$("#info_other_type_work").click(function(){
+				freshFormData = getEntity("work")
+			});
+			$("#info_other_type_height").click(function(){
+				freshFormData = getEntity("height")
+			});
+			$("#info_other_type_weight").click(function(){
+				freshFormData = getEntity("weight")
+			});
+			$("#info_other_type_school").click(function(){
+				freshFormData = getEntity("school")
+			});
+			$("#info_other_type_born").click(function(){
+				freshFormData = getEntity("born")
+			});
+			$("#info_other_type_id").click(function(){
+				freshFormData = getEntity("id")
+			});
+			$("#info_other_type_mail").click(function(){
+				freshFormData = getEntity("mail")
+			});
+			$("#info_other_type_birth").click(function(){
+				freshFormData = getEntity("birth")
+			});
+			$("#search").click(function(){
+				freshFormData = getEntity(freshFormData["info_other_type"]);
+				console.log(getPostJson(freshFormData));
+				$("#wait").show();
+				document.getElementById("search_div").style.opacity=0;
+				$("#origin").fadeOut("slow");
+				check();
+			});
+	});
+	function check() {
+        $.ajax({
+            type: "POST",//方法类型
+            dataType: "json",//预期服务器返回的数据类型
+            url: "/search_func/" ,//url
+            data: getPostJson(freshFormData),
+            success: function (result){
+                if (result.code == 200) {
+                    alert("SUCCESS");
+                    window.location.replace("/result.html?data=result.grade");
+                }
+                else if(result.code == 300){	
+					document.getElementById("search_div").style.opacity=1;
+			    	$("#origin").hide();
+			    	$("#wait").hide();
+			    	$("#reInput").show();
+			    	if(freshFormData["info_other_type"]!=""){
+						$("#info_other_type_"+freshFormData["info_other_type"]+"_re").val(freshFormData["info_other_detail"]);
+			    	}
+                }
+            },
+            error : function() {alert("ERROR")}
+        });
+	}
+</script>
+
 </body>
 </html>
